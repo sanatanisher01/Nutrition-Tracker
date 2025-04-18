@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Generate AI Diet Plan - NutriTrack{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h1 class="fw-bold mb-4">Generate AI Diet Plan</h1>
+
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-4">Your Personalized AI Diet Plan</h3>
+
+                        <div class="alert alert-info">
+                            <div class="d-flex">
+                                <div class="me-3">
+                                    <i class="fas fa-robot fa-2x"></i>
+                                </div>
+                                <div>
+                                    <h5 class="alert-heading mb-1">AI-Powered Nutrition</h5>
+                                    <p class="mb-0">Our AI nutritionist will create a personalized 7-day meal plan based on your profile and preferences.</p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label class="form-label">Start Date</label>
+                                    <input type="date" name="start_date" class="form-control" value="{{ today }}" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">End Date</label>
+                                    <input type="date" name="end_date" class="form-control" value="{{ week_later }}" required>
+                                </div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-magic me-2"></i>Generate AI Diet Plan
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3">Your Profile Summary</h4>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Age:</strong> {{ user_profile.age }}</p>
+                                <p><strong>Gender:</strong> {{ user_profile.get_gender_display }}</p>
+                                <p><strong>Height:</strong> {{ user_profile.height }} cm</p>
+                                <p><strong>Weight:</strong> {{ user_profile.weight }} kg</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Activity Level:</strong> {{ user_profile.get_activity_level_display }}</p>
+                                <p><strong>Goal:</strong> {{ user_profile.get_goal_display }}</p>
+                                <p><strong>Daily Calories:</strong> {{ user_profile.daily_calories }}</p>
+                                <p><strong>Diet Type:</strong> {{ diet_pref.get_diet_type_display }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3">How It Works</h4>
+
+                        <div class="d-flex mb-3">
+                            <div class="me-3 text-primary">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                                    <span>1</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h5>Profile Analysis</h5>
+                                <p>Our AI analyzes your profile data including age, weight, height, activity level, and dietary preferences.</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mb-3">
+                            <div class="me-3 text-primary">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                                    <span>2</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h5>Nutritional Calculation</h5>
+                                <p>The system calculates your optimal macronutrient distribution based on your daily calorie target.</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex mb-3">
+                            <div class="me-3 text-primary">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                                    <span>3</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h5>Meal Selection</h5>
+                                <p>The AI selects meals that match your preferences and nutritional requirements.</p>
+                            </div>
+                        </div>
+
+                        <div class="d-flex">
+                            <div class="me-3 text-primary">
+                                <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                                    <span>4</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h5>Plan Generation</h5>
+                                <p>A complete 7-day meal plan is generated with breakfast, lunch, dinner, and snacks for each day.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

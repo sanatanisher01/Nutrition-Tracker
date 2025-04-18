@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Calorie Calculator - NutriTrack{% endblock %}
+
+{% block content %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-4 fw-bold mb-4">Calorie <span class="text-primary">Calculator</span></h1>
+                <p class="lead mb-0">Find out how many calories you need per day based on your personal details and goals</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="calculator-form">
+                    <h3 class="fw-bold mb-4">Enter Your Details</h3>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                {{ form.age|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.gender|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                {{ form.height|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.weight|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                {{ form.activity_level|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.goal|as_crispy_field }}
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">Calculate</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 mt-5 mt-lg-0">
+                {% if result %}
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <h3 class="fw-bold mb-4">Your Results</h3>
+                        
+                        <div class="text-center mb-4">
+                            <h2 class="calorie-result">{{ result.daily_calories }}</h2>
+                            <p class="lead">Calories per day for {{ result.goal }}</p>
+                        </div>
+                        
+                        <div class="row text-center mb-4">
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded">
+                                    <h4>{{ result.bmr }}</h4>
+                                    <p class="mb-0 text-muted">Basal Metabolic Rate</p>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded">
+                                    <h4>{{ result.tdee }}</h4>
+                                    <p class="mb-0 text-muted">Total Daily Energy Expenditure</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">What These Numbers Mean</h5>
+                            <p class="mb-0"><strong>BMR (Basal Metabolic Rate):</strong> The number of calories your body needs at rest to maintain basic functions.</p>
+                            <p class="mb-0"><strong>TDEE (Total Daily Energy Expenditure):</strong> Your BMR adjusted for your activity level.</p>
+                            <p class="mb-0"><strong>Daily Calories:</strong> Your TDEE adjusted based on your goal (weight loss, maintenance, or muscle gain).</p>
+                        </div>
+                        
+                        {% if not user.is_authenticated %}
+                            <div class="alert alert-primary">
+                                <h5 class="alert-heading">Want to Track Your Progress?</h5>
+                                <p>Create an account to save these results and get a personalized diet plan.</p>
+                                <div class="d-grid gap-2">
+                                    <a href="{% url 'register' %}" class="btn btn-primary">Sign Up Now</a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="bg-white p-4 rounded shadow-sm">
+                        <h3 class="fw-bold mb-4">How It Works</h3>
+                        
+                        <div class="mb-4">
+                            <h5><i class="fas fa-calculator text-primary me-2"></i> Accurate Calculations</h5>
+                            <p>We use the Mifflin-St Jeor Equation, which is widely recognized as one of the most accurate formulas for estimating calorie needs.</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5><i class="fas fa-user-cog text-primary me-2"></i> Personalized Results</h5>
+                            <p>Your calorie needs are calculated based on your age, gender, height, weight, activity level, and goal.</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5><i class="fas fa-chart-line text-primary me-2"></i> Goal-Based Adjustments</h5>
+                            <p>We adjust your calorie needs based on whether you want to lose weight, maintain weight, or gain muscle.</p>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">Did You Know?</h5>
+                            <p class="mb-0">Your daily calorie needs can vary based on factors like stress, sleep quality, and hormone levels. This calculator provides a good starting point, but you may need to adjust based on your results.</p>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h3 class="fw-bold mb-4 text-center">Frequently Asked Questions</h3>
+                
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                How accurate is this calorie calculator?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                This calculator uses the Mifflin-St Jeor Equation, which is considered one of the most accurate formulas for estimating calorie needs. However, it's important to remember that it provides an estimate. Individual factors like metabolism, genetics, and medical conditions can affect your actual calorie needs. Use this as a starting point and adjust based on your results.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                How much of a calorie deficit should I aim for to lose weight?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                A safe and sustainable rate of weight loss is about 0.5-1 kg (1-2 pounds) per week, which typically requires a calorie deficit of 500-1000 calories per day. Our calculator automatically applies a 500-calorie deficit for weight loss goals. Going below this is not recommended without medical supervision, as extreme calorie restriction can slow metabolism and lead to nutrient deficiencies.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Should I eat back the calories I burn during exercise?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                The activity level you select in the calculator already accounts for your regular exercise. If you're trying to lose weight, it's generally not recommended to eat back all the calories burned during exercise, as this can slow progress. If you're maintaining weight or building muscle, you may need to eat back some or all of those calories to support your goals and recovery.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                How often should I recalculate my calorie needs?
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                It's a good idea to recalculate your calorie needs whenever there's a significant change in your weight (more than 5 kg / 10 pounds), activity level, or goals. Even without major changes, recalculating every 3-6 months is recommended, as your metabolism can adapt to your current calorie intake over time.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

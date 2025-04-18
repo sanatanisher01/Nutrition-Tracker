@@ -1,0 +1,77 @@
+/* Light Theme */
+:root {
+    --primary-color: #4CAF50;
+    --secondary-color: #FF9800;
+    --accent-color: #2196F3;
+    --text-color: #333333;
+    --light-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --border-color: #dee2e6;
+    --shadow-color: rgba(0, 0, 0, 0.05);
+}
+
+body {
+    background-color: var(--light-bg);
+    color: var(--text-color);
+}
+
+.navbar, footer {
+    background-color: #ffffff !important;
+}
+
+.card, .feature-card, .dashboard-card, .meal-card {
+    background-color: var(--card-bg);
+}
+
+.form-control {
+    background-color: #ffffff;
+    border-color: var(--border-color);
+}
+
+.table {
+    color: var(--text-color);
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+}
+
+.list-group-item {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+}
+
+.dropdown-menu {
+    background-color: var(--card-bg);
+}
+
+.dropdown-item {
+    color: var(--text-color);
+}
+
+.dropdown-item:hover {
+    background-color: var(--light-bg);
+}
+
+.btn-outline-secondary {
+    color: var(--text-color);
+    border-color: var(--border-color);
+}
+
+.btn-outline-secondary:hover {
+    background-color: var(--light-bg);
+    color: var(--text-color);
+}
+
+.chat-container {
+    background-color: var(--card-bg);
+}
+
+.bot-message {
+    background-color: var(--light-bg);
+    color: var(--text-color);
+}
+
+.calculator-form {
+    background-color: var(--card-bg);
+}

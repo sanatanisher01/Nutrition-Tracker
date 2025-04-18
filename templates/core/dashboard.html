@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - NutriTrack{% endblock %}
+
+{% block extra_css %}
+<style>
+    .calorie-progress {
+        height: 20px;
+        border-radius: 10px;
+    }
+    .dashboard-card {
+        transition: transform 0.3s ease;
+    }
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row mb-4">
+            <div class="col-md-8">
+                <h1 class="fw-bold">Welcome, {{ user.first_name|default:user.username }}</h1>
+                <p class="lead">Here's your nutrition summary for today</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                <div class="btn-group">
+                    <a href="{% url 'generate_diet_plan' %}" class="btn btn-outline-primary">
+                        <i class="fas fa-plus-circle me-2"></i>Manual Plan
+                    </a>
+                    <a href="{% url 'generate_ai_diet_plan' %}" class="btn btn-primary">
+                        <i class="fas fa-robot me-2"></i>AI Plan
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calorie Summary -->
+        <div class="row mb-4">
+            <div class="col-lg-12">
+                <div class="dashboard-card bg-white p-4 rounded shadow-sm">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h3 class="fw-bold mb-0">Today's Calories</h3>
+                        <span class="badge bg-primary">{{ calories_consumed }} / {{ user_profile.daily_calories }} kcal</span>
+                    </div>
+
+                    <div class="progress calorie-progress mb-3">
+                        {% if user_profile.daily_calories %}
+                            <div class="progress-bar bg-success" role="progressbar"
+                                style="width: {{ calories_consumed|default:0|floatformat:0 }}%;"
+                                aria-valuenow="{{ calories_consumed|default:0|floatformat:0 }}"
+                                aria-valuemin="0"
+                                aria-valuemax="{{ user_profile.daily_calories }}">
+                                {{ calories_consumed }} kcal
+                            </div>
+                        {% else %}
+                            <div class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                0 kcal
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <h5 class="fw-bold text-success">{{ calories_consumed }}</h5>
+                            <small class="text-muted">Consumed</small>
+                        </div>
+                        <div class="col-4">
+                            <h5 class="fw-bold text-primary">{{ calories_remaining }}</h5>
+                            <small class="text-muted">Remaining</small>
+                        </div>
+                        <div class="col-4">
+                            <h5 class="fw-bold">{{ user_profile.daily_calories }}</h5>
+                            <small class="text-muted">Daily Target</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Meals and Weight Tracking -->
+        <div class="row mb-4">
+            <div class="col-lg-8">
+                <div class="dashboard-card bg-white p-4 rounded shadow-sm h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold mb-0">Today's Meals</h3>
+                        <a href="{% url 'meal_log' %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-plus me-1"></i>Add Meal
+                        </a>
+                    </div>
+
+                    {% if meal_logs %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Time</th>
+                                        <th>Meal</th>
+                                        <th>Calories</th>
+                                        <th>Protein</th>
+                                        <th>Carbs</th>
+                                        <th>Fat</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for log in meal_logs %}
+                                        <tr>
+                                            <td>{{ log.time|time:"H:i" }}</td>
+                                            <td>
+                                                {% if log.meal %}
+                                                    <a href="{% url 'meal_detail' log.meal.id %}">{{ log.meal.name }}</a>
+                                                {% else %}
+                                                    {{ log.custom_meal_name }}
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ log.calories }} kcal</td>
+                                            <td>{{ log.protein }}g</td>
+                                            <td>{{ log.carbs }}g</td>
+                                            <td>{{ log.fat }}g</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% elif today_meals %}
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">Suggested Meals from Your Diet Plan</h5>
+                            <p>You haven't logged any meals today. Here are today's suggested meals from your active diet plan:</p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Meal</th>
+                                        <th>Calories</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for meal_plan in today_meals %}
+                                        <tr>
+                                            <td>{{ meal_plan.get_meal_type_display }}</td>
+                                            <td>
+                                                <a href="{% url 'meal_detail' meal_plan.meal.id %}">{{ meal_plan.meal.name }}</a>
+                                            </td>
+                                            <td>{{ meal_plan.meal.calories }} kcal</td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <a href="{% url 'mark_meal_taken' meal_plan.id %}" class="btn btn-sm btn-success">
+                                                        <i class="fas fa-utensils me-1"></i>Taken
+                                                    </a>
+                                                    <a href="{% url 'meal_log' %}?meal_id={{ meal_plan.meal.id }}" class="btn btn-sm btn-outline-success">
+                                                        <i class="fas fa-check me-1"></i>Log
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">No Meals Logged Today</h5>
+                            <p>You haven't logged any meals today. Use the "Add Meal" button to log your meals or generate a diet plan.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="dashboard-card bg-white p-4 rounded shadow-sm h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold mb-0">Weight Tracking</h3>
+                        <a href="{% url 'weight_log' %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-plus me-1"></i>Log Weight
+                        </a>
+                    </div>
+
+                    {% if weight_logs %}
+                        <div class="text-center mb-4">
+                            <h4 class="fw-bold">{{ weight_logs.0.weight }} kg</h4>
+                            <p class="text-muted mb-0">Current Weight ({{ weight_logs.0.date|date:"M d, Y" }})</p>
+                        </div>
+
+                        <h5 class="fw-bold mb-3">Recent History</h5>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Weight</th>
+                                        <th>Change</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for log in weight_logs %}
+                                        <tr>
+                                            <td>{{ log.date|date:"M d" }}</td>
+                                            <td>{{ log.weight }} kg</td>
+                                            <td>
+                                                <span class="text-muted">-</span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">No Weight Data</h5>
+                            <p>You haven't logged your weight yet. Use the "Log Weight" button to start tracking your progress.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Diet Plan and Nutrition Stats -->
+        <div class="row">
+            <div class="col-lg-6 mb-4">
+                <div class="dashboard-card bg-white p-4 rounded shadow-sm h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold mb-0">Active Diet Plan</h3>
+                        <a href="{% url 'list_diet_plans' %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-list me-1"></i>All Plans
+                        </a>
+                    </div>
+
+                    {% if active_plan %}
+                        <div class="mb-3">
+                            <h4>{{ active_plan.name }}</h4>
+                            <p class="text-muted">{{ active_plan.start_date|date:"M d, Y" }} to {{ active_plan.end_date|date:"M d, Y" }}</p>
+                        </div>
+
+                        <div class="d-grid">
+                            <a href="{% url 'view_diet_plan' active_plan.id %}" class="btn btn-primary">
+                                <i class="fas fa-eye me-2"></i>View Plan
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="alert alert-info">
+                            <h5 class="alert-heading">No Active Diet Plan</h5>
+                            <p>You don't have an active diet plan. Generate a new plan to get personalized meal suggestions.</p>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'generate_diet_plan' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-plus-circle me-2"></i>Manual Diet Plan
+                            </a>
+                            <a href="{% url 'generate_ai_diet_plan' %}" class="btn btn-primary">
+                                <i class="fas fa-robot me-2"></i>AI Diet Plan
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-6 mb-4">
+                <div class="dashboard-card bg-white p-4 rounded shadow-sm h-100">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h3 class="fw-bold mb-0">Nutrition Stats</h3>
+                        <a href="{% url 'profile' %}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-user me-1"></i>Profile
+                        </a>
+                    </div>
+
+                    <div class="row text-center mb-4">
+                        <div class="col-4">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 60px; height: 60px;">
+                                <i class="fas fa-fire fa-lg"></i>
+                            </div>
+                            <h5 class="fw-bold">{{ user_profile.daily_calories }}</h5>
+                            <small class="text-muted">Daily Calories</small>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 60px; height: 60px;">
+                                <i class="fas fa-weight fa-lg"></i>
+                            </div>
+                            <h5 class="fw-bold">{{ user_profile.weight }}</h5>
+                            <small class="text-muted">Current Weight</small>
+                        </div>
+
+                        <div class="col-4">
+                            <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center mx-auto mb-2" style="width: 60px; height: 60px;">
+                                <i class="fas fa-running fa-lg"></i>
+                            </div>
+                            <h5 class="fw-bold">{{ user_profile.get_activity_level_display|truncatechars:10 }}</h5>
+                            <small class="text-muted">Activity Level</small>
+                        </div>
+                    </div>
+
+                    <div class="d-grid">
+                        <a href="{% url 'ai_coach' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-robot me-2"></i>Ask NutriBot
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Custom filter for subtraction (for weight change calculation)
+    // Note: In a real application, this would be implemented as a Django template filter
+    function sub(a, b) {
+        return a - b;
+    }
+</script>
+{% endblock %}

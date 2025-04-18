@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Complete Your Profile - NutriTrack{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="fw-bold mb-4 text-center">Complete Your Profile</h2>
+                        <p class="text-muted text-center mb-4">We need some information to create your personalized diet plan</p>
+                        
+                        <div class="progress mb-4">
+                            <div class="progress-bar" role="progressbar" style="width: 33%;" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100">Step 1 of 3</div>
+                        </div>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    {{ form.age|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.gender|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    {{ form.height|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.weight|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    {{ form.activity_level|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.goal|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Continue to Diet Preferences</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3">Why We Need This Information</h4>
+                        <p>This information helps us calculate your:</p>
+                        <ul>
+                            <li><strong>Basal Metabolic Rate (BMR):</strong> The number of calories your body needs at rest</li>
+                            <li><strong>Total Daily Energy Expenditure (TDEE):</strong> Your BMR adjusted for your activity level</li>
+                            <li><strong>Daily Calorie Target:</strong> TDEE adjusted based on your goal (weight loss, maintenance, or muscle gain)</li>
+                        </ul>
+                        <p class="mb-0">We use the Mifflin-St Jeor Equation, which is widely recognized as one of the most accurate formulas for estimating calorie needs.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

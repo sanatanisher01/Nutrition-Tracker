@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Contact Us - NutriTrack{% endblock %}
+
+{% block content %}
+<!-- Contact Hero Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h1 class="display-4 fw-bold mb-4">Get in <span class="text-primary">Touch</span></h1>
+                <p class="lead mb-0">Have questions, feedback, or suggestions? We'd love to hear from you!</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Contact Form Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <h2 class="fw-bold mb-4">Send Us a Message</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary">Send Message</button>
+                </form>
+            </div>
+            <div class="col-lg-5 offset-lg-1 mt-5 mt-lg-0">
+                <h2 class="fw-bold mb-4">Contact Information</h2>
+                
+                <div class="d-flex mb-4">
+                    <div class="me-3 text-primary">
+                        <i class="fas fa-map-marker-alt fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5>Address</h5>
+                        <p class="mb-0">123 Nutrition Street, Healthy City, HC 12345</p>
+                    </div>
+                </div>
+                
+                <div class="d-flex mb-4">
+                    <div class="me-3 text-primary">
+                        <i class="fas fa-phone fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5>Phone</h5>
+                        <p class="mb-0">(123) 456-7890</p>
+                    </div>
+                </div>
+                
+                <div class="d-flex mb-4">
+                    <div class="me-3 text-primary">
+                        <i class="fas fa-envelope fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5>Email</h5>
+                        <p class="mb-0">info@nutritrack.com</p>
+                    </div>
+                </div>
+                
+                <div class="d-flex mb-4">
+                    <div class="me-3 text-primary">
+                        <i class="fas fa-clock fa-2x"></i>
+                    </div>
+                    <div>
+                        <h5>Business Hours</h5>
+                        <p class="mb-0">Monday - Friday: 9:00 AM - 5:00 PM<br>Saturday - Sunday: Closed</p>
+                    </div>
+                </div>
+                
+                <h5 class="mt-5 mb-3">Connect With Us</h5>
+                <div class="social-icons">
+                    <a href="#" class="me-2"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="me-2"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="me-2"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="me-2"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <h2 class="fw-bold mb-5">Frequently Asked Questions</h2>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-10 mx-auto">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingOne">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                How does NutriTrack calculate my calorie needs?
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                NutriTrack uses the Mifflin-St Jeor Equation to calculate your Basal Metabolic Rate (BMR), which is the number of calories your body needs at rest. We then apply an activity multiplier based on your activity level to determine your Total Daily Energy Expenditure (TDEE). Finally, we adjust this number based on your goal (weight loss, maintenance, or muscle gain) to arrive at your daily calorie target.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingTwo">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                Can I use NutriTrack if I have dietary restrictions?
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Absolutely! NutriTrack is designed to accommodate various dietary preferences and restrictions. During the setup process, you can specify if you're vegetarian, vegan, or have specific allergies or food intolerances. Our meal suggestions will be tailored to meet your specific needs while ensuring nutritional adequacy.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingThree">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                Is NutriTrack suitable for athletes or bodybuilders?
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, NutriTrack can be used by athletes and bodybuilders. Our system allows you to set higher activity levels and specific goals like muscle gain. The meal plans can be adjusted to provide higher protein intake and sufficient calories to support athletic performance and muscle growth. However, for elite athletes with very specific needs, we recommend also consulting with a sports nutritionist.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFour">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+                                Can I customize the meal plans?
+                            </button>
+                        </h2>
+                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes, all meal plans in NutriTrack are customizable. You can swap meals, adjust portions, or replace ingredients based on your preferences. If you don't like a suggested meal, you can easily replace it with another option from our extensive meal library that fits within your nutritional targets.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingFive">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+                                Is my data secure with NutriTrack?
+                            </button>
+                        </h2>
+                        <div id="collapseFive" class="accordion-collapse collapse" aria-labelledby="headingFive" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                We take data security very seriously. All personal information and health data are encrypted and stored securely. We never share your information with third parties without your explicit consent. You can review our privacy policy for more detailed information about how we protect and use your data.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Map Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="fw-bold mb-4 text-center">Find Us</h2>
+                <div class="ratio ratio-21x9">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.215266754809!2d-73.98776568459377!3d40.758895879326895!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25855c6480299%3A0x55194ec5a1ae072e!2sTimes%20Square!5e0!3m2!1sen!2sus!4v1650000000000!5m2!1sen!2sus" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

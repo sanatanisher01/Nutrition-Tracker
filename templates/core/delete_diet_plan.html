@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Delete Diet Plan - NutriTrack{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-danger text-white">
+                        <h3 class="fw-bold mb-0">Delete Diet Plan</h3>
+                    </div>
+                    <div class="card-body p-4">
+                        <div class="alert alert-warning mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-exclamation-triangle fa-2x me-3"></i>
+                                <div>
+                                    <h4 class="alert-heading mb-1">Warning!</h4>
+                                    <p class="mb-0">You are about to delete this diet plan. This action cannot be undone.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <h4>Diet Plan Details</h4>
+                            <p><strong>Name:</strong> {{ diet_plan.name }}</p>
+                            <p><strong>Start Date:</strong> {{ diet_plan.start_date|date:"F d, Y" }}</p>
+                            <p><strong>End Date:</strong> {{ diet_plan.end_date|date:"F d, Y" }}</p>
+                            <p><strong>Status:</strong> {% if diet_plan.is_active %}<span class="text-success">Active</span>{% else %}<span class="text-muted">Inactive</span>{% endif %}</p>
+                        </div>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash me-2"></i>Yes, Delete This Diet Plan
+                                </button>
+                                <a href="{% url 'view_diet_plan' diet_plan.id %}" class="btn btn-outline-secondary">
+                                    <i class="fas fa-arrow-left me-2"></i>Cancel and Go Back
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Diet Preferences - NutriTrack{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4 p-md-5">
+                        <h2 class="fw-bold mb-4 text-center">Diet Preferences</h2>
+                        <p class="text-muted text-center mb-4">Tell us about your dietary preferences and restrictions</p>
+                        
+                        <div class="progress mb-4">
+                            <div class="progress-bar" role="progressbar" style="width: 66%;" aria-valuenow="66" aria-valuemin="0" aria-valuemax="100">Step 2 of 3</div>
+                        </div>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="mb-4">
+                                {{ form.diet_type|as_crispy_field }}
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    {{ form.allergies|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.preferred_cuisines|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    {{ form.disliked_ingredients|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.favorite_ingredients|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button type="submit" class="btn btn-primary btn-lg">Save Preferences</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3">Why Diet Preferences Matter</h4>
+                        <p>Your diet preferences help us:</p>
+                        <ul>
+                            <li><strong>Personalize Your Meal Plans:</strong> We'll suggest meals that align with your dietary choices</li>
+                            <li><strong>Avoid Allergens:</strong> We'll exclude ingredients you're allergic to</li>
+                            <li><strong>Match Your Taste:</strong> We'll prioritize cuisines you enjoy and avoid ingredients you dislike</li>
+                            <li><strong>Ensure Nutritional Adequacy:</strong> We'll make sure your diet meets all nutritional requirements despite any restrictions</li>
+                        </ul>
+                        <p class="mb-0">You can update these preferences at any time from your profile settings.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

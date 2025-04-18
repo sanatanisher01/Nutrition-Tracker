@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Diet Plan - NutriTrack{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="fw-bold">{{ diet_plan.name }}</h1>
+                    <div class="btn-group">
+                        {% if not diet_plan.is_active %}
+                            <a href="{% url 'activate_diet_plan' diet_plan.id %}" class="btn btn-success">
+                                <i class="fas fa-check-circle me-2"></i>Activate Plan
+                            </a>
+                        {% endif %}
+                        <a href="{% url 'delete_diet_plan' diet_plan.id %}" class="btn btn-outline-danger">
+                            <i class="fas fa-trash me-2"></i>Delete Plan
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="fw-bold mb-0">Plan Details</h3>
+                            {% if diet_plan.is_active %}
+                                <span class="badge bg-success">Active Plan</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <p><strong>Start Date:</strong> {{ diet_plan.start_date|date:"F d, Y" }}</p>
+                                <p><strong>End Date:</strong> {{ diet_plan.end_date|date:"F d, Y" }}</p>
+                                <p><strong>Created:</strong> {{ diet_plan.created_at|date:"F d, Y" }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p><strong>Plan Status:</strong> {% if diet_plan.is_active %}<span class="text-success">Active</span>{% else %}<span class="text-muted">Inactive</span>{% endif %}</p>
+                                <p><strong>Target Calories:</strong> {{ diet_plan.total_calories }} kcal/day</p>
+                                <p><strong>Plan Type:</strong> <span class="badge bg-primary">AI-Generated</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if diet_plan.description %}
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-4">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <h3 class="fw-bold mb-0">AI-Generated Meal Plan</h3>
+                        </div>
+
+                        <div class="ai-plan-content markdown-content">
+                            {{ diet_plan.description|linebreaks }}
+                        </div>
+
+                        <div class="mt-4">
+                            <a href="{% url 'add_meals_from_plan' diet_plan.id %}" class="btn btn-success">
+                                <i class="fas fa-plus-circle me-2"></i>Add These Meals to My Plan
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% for day_num, day_data in days.items %}
+                    <div class="card border-0 shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h3 class="fw-bold mb-0">{{ day_data.name }}</h3>
+                        </div>
+                        <div class="card-body p-4">
+                            {% if day_data.meals %}
+                                {% for meal_plan in day_data.meals %}
+                                    <div class="meal-card mb-4 {% if forloop.last %}mb-0{% endif %}">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="me-3">
+                                                {% if meal_plan.meal_type == 'B' %}
+                                                    <div class="rounded-circle bg-warning text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-coffee"></i>
+                                                    </div>
+                                                {% elif meal_plan.meal_type == 'L' %}
+                                                    <div class="rounded-circle bg-success text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-utensils"></i>
+                                                    </div>
+                                                {% elif meal_plan.meal_type == 'D' %}
+                                                    <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-utensils"></i>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                        <i class="fas fa-apple-alt"></i>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div>
+                                                <h4 class="fw-bold mb-0">{{ meal_plan.get_meal_type_display }}</h4>
+                                                <p class="text-muted mb-0">{{ meal_plan.meal.calories }} kcal</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <h5><a href="{% url 'meal_detail' meal_plan.meal.id %}">{{ meal_plan.meal.name }}</a></h5>
+                                                <p>{{ meal_plan.meal.description|truncatechars:150 }}</p>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="meal-nutrition">
+                                                    <div class="nutrition-item">
+                                                        <div class="nutrition-value">{{ meal_plan.meal.protein }}g</div>
+                                                        <div class="nutrition-label">Protein</div>
+                                                    </div>
+                                                    <div class="nutrition-item">
+                                                        <div class="nutrition-value">{{ meal_plan.meal.carbs }}g</div>
+                                                        <div class="nutrition-label">Carbs</div>
+                                                    </div>
+                                                    <div class="nutrition-item">
+                                                        <div class="nutrition-value">{{ meal_plan.meal.fat }}g</div>
+                                                        <div class="nutrition-label">Fat</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="alert alert-info">
+                                    <p class="mb-0">No meals planned for this day. Use the AI-generated meal plan above for guidance.</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="card border-0 shadow-sm sticky-top" style="top: 20px;">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-4">Actions</h3>
+
+                        <div class="d-grid gap-3">
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-tachometer-alt me-2"></i>Back to Dashboard
+                            </a>
+
+                            <a href="{% url 'list_diet_plans' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-list me-2"></i>View All Plans
+                            </a>
+
+                            <a href="{% url 'generate_diet_plan' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-plus-circle me-2"></i>Create New Plan
+                            </a>
+
+                            <a href="{% url 'generate_ai_diet_plan' %}" class="btn btn-primary">
+                                <i class="fas fa-robot me-2"></i>Generate AI Plan
+                            </a>
+
+                            <button class="btn btn-success" onclick="window.print()">
+                                <i class="fas fa-print me-2"></i>Print Plan
+                            </button>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <h4 class="fw-bold mb-3">Need Help?</h4>
+                        <p>Have questions about your diet plan or need personalized advice?</p>
+                        <a href="{% url 'ai_coach' %}" class="btn btn-outline-primary w-100">
+                            <i class="fas fa-comment-dots me-2"></i>Ask NutriBot
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

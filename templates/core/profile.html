@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}Your Profile - NutriTrack{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1 class="fw-bold mb-4">Your Profile</h1>
+                
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-4">Personal Information</h3>
+                        
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    {{ form.age|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.gender|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    {{ form.height|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.weight|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    {{ form.activity_level|as_crispy_field }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form.goal|as_crispy_field }}
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary">Update Profile</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="fw-bold mb-0">Diet Preferences</h3>
+                            <a href="{% url 'diet_preferences' %}" class="btn btn-outline-primary">Edit Preferences</a>
+                        </div>
+                        
+                        <p class="mb-0">You can update your dietary preferences, allergies, and cuisine choices.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="fw-bold mb-4">Nutrition Summary</h3>
+                        
+                        <div class="mb-4">
+                            <h5>Daily Calorie Target</h5>
+                            <h2 class="text-primary">{{ daily_calories }} kcal</h2>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h5>Basal Metabolic Rate (BMR)</h5>
+                            <p class="mb-0">{{ bmr|default:"Not calculated" }} kcal</p>
+                            <small class="text-muted">Calories your body needs at rest</small>
+                        </div>
+                        
+                        <div>
+                            <h5>Total Daily Energy Expenditure (TDEE)</h5>
+                            <p class="mb-0">{{ tdee|default:"Not calculated" }} kcal</p>
+                            <small class="text-muted">BMR adjusted for your activity level</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h3 class="fw-bold mb-0">Weight History</h3>
+                            <a href="{% url 'weight_log' %}" class="btn btn-outline-primary">View All</a>
+                        </div>
+                        
+                        {% if weight_logs %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Weight</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for log in weight_logs %}
+                                            <tr>
+                                                <td>{{ log.date|date:"M d, Y" }}</td>
+                                                <td>{{ log.weight }} kg</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info">
+                                <p class="mb-0">You haven't logged your weight yet. Start tracking to see your progress over time.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

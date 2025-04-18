@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Weight Log - NutriTrack{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 mx-auto">
+                <h1 class="fw-bold mb-4">Weight Log</h1>
+
+                <!-- Add Weight Form -->
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3">Log Your Weight</h4>
+
+                        <form method="post">
+                            {% csrf_token %}
+
+                            <div class="row mb-3">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <label class="form-label">Date</label>
+                                    {{ form.date }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Weight (kg)</label>
+                                    {{ form.weight }}
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Notes</label>
+                                {{ form.notes }}
+                                <div class="form-text">Optional notes about your weight measurement (e.g., time of day, before/after workout)</div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save me-2"></i>Save Weight
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Weight History -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3">Weight History</h4>
+
+                        {% if logs %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Weight</th>
+                                            <th>Change</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for log in logs %}
+                                            <tr>
+                                                <td>{{ log.date|date:"M d, Y" }}</td>
+                                                <td>{{ log.weight }} kg</td>
+                                                <td>
+                                                        <span class="text-muted">-</span>
+                                                </td>
+                                                <td>{{ log.notes|default:"-" }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Weight Chart Placeholder -->
+                            <div class="mt-4">
+                                <h5 class="fw-bold mb-3">Weight Trend</h5>
+                                <div class="bg-light p-4 rounded text-center">
+                                    <p class="mb-0">Weight chart will be displayed here.</p>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info">
+                                <p class="mb-0">No weight logs found. Use the form above to start tracking your weight.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Weight Tips -->
+                <div class="card border-0 shadow-sm mt-4">
+                    <div class="card-body p-4">
+                        <h4 class="fw-bold mb-3">Weight Tracking Tips</h4>
+
+                        <ul class="mb-0">
+                            <li class="mb-2">Weigh yourself at the same time each day, preferably in the morning after using the bathroom and before eating or drinking.</li>
+                            <li class="mb-2">Use the same scale each time for consistency.</li>
+                            <li class="mb-2">Remember that weight can fluctuate 1-2 kg throughout the day due to water, food, and other factors.</li>
+                            <li class="mb-2">Focus on the trend over time rather than daily fluctuations.</li>
+                            <li>Consider tracking other measurements like waist circumference for a more complete picture of your progress.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

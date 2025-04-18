@@ -1,0 +1,103 @@
+/* AI Plan Styles */
+.ai-plan-content {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.ai-plan-content h1,
+.ai-plan-content h2,
+.ai-plan-content h3,
+.ai-plan-content h4,
+.ai-plan-content h5,
+.ai-plan-content h6 {
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.ai-plan-content h1 {
+    font-size: 1.8rem;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 0.5rem;
+}
+
+.ai-plan-content h2 {
+    font-size: 1.5rem;
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 0.3rem;
+}
+
+.ai-plan-content h3 {
+    font-size: 1.3rem;
+}
+
+.ai-plan-content h4 {
+    font-size: 1.1rem;
+}
+
+.ai-plan-content p {
+    margin-bottom: 1rem;
+}
+
+.ai-plan-content ul, 
+.ai-plan-content ol {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.ai-plan-content li {
+    margin-bottom: 0.5rem;
+}
+
+.ai-plan-content strong {
+    font-weight: 600;
+}
+
+.ai-plan-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+.ai-plan-content th,
+.ai-plan-content td {
+    padding: 0.75rem;
+    border: 1px solid #e0e0e0;
+}
+
+.ai-plan-content th {
+    background-color: #f5f5f5;
+    font-weight: 600;
+    text-align: left;
+}
+
+.ai-plan-content tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.ai-plan-content blockquote {
+    border-left: 4px solid #e0e0e0;
+    padding-left: 1rem;
+    margin-left: 0;
+    color: #666;
+}
+
+/* Print styles */
+@media print {
+    .ai-plan-content {
+        font-size: 12pt;
+    }
+    
+    .ai-plan-content h1 {
+        font-size: 18pt;
+    }
+    
+    .ai-plan-content h2 {
+        font-size: 16pt;
+    }
+    
+    .ai-plan-content h3 {
+        font-size: 14pt;
+    }
+}
