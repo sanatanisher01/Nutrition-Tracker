@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}API Service Unavailable - NutriTrack{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-5 text-center">
+                        <div class="mb-4">
+                            <i class="fas fa-exclamation-triangle text-warning fa-4x"></i>
+                        </div>
+                        <h1 class="fw-bold mb-4">AI Service Temporarily Unavailable</h1>
+                        
+                        <div class="alert alert-warning mb-4">
+                            <p class="mb-0">{{ error_message }}</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="fw-bold">Why is this happening?</h4>
+                            <p>Our AI service uses the OpenAI API, which has usage limits. The current limit has been reached, which is preventing new AI-generated diet plans.</p>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h4 class="fw-bold">What can I do instead?</h4>
+                            <p>You can still create a manual diet plan by selecting meals from our database:</p>
+                            <a href="{% url 'generate_diet_plan' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-plus-circle me-2"></i>Create Manual Diet Plan
+                            </a>
+                        </div>
+                        
+                        <div class="mt-5">
+                            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

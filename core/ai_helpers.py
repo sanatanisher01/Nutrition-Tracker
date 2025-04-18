@@ -9,10 +9,23 @@ from openai import OpenAI
 
 # Configure OpenAI client
 def get_openai_client():
-    # Create a client with the API key from settings
-    return OpenAI(
-        api_key=settings.OPENAI_API_KEY
-    )
+    # Get the API key from settings
+    api_key = settings.OPENAI_API_KEY
+
+    # Log the first few characters of the API key for debugging
+    if api_key:
+        logger.debug(f"API key starts with: {api_key[:10]}...")
+    else:
+        logger.error("No API key found in settings")
+        raise ValueError("OpenAI API key is missing")
+
+    try:
+        # Create a client with the API key
+        logger.debug("Using new OpenAI client")
+        return OpenAI(api_key=api_key)
+    except Exception as e:
+        logger.error(f"Error with new OpenAI client: {str(e)}")
+        raise
 
 def get_chatbot_response(user_message):
     """Get a response from the AI chatbot based on user message"""

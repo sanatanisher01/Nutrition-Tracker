@@ -42,6 +42,9 @@ urlpatterns = [
     # AI Coach
     path('ai-coach/', views.ai_coach, name='ai_coach'),
 
+    # API Error
+    path('api-error/', views.api_error, name='api_error'),
+
     # Mark meal as taken
     path('diet-plan-meal/<int:meal_plan_id>/mark-taken/', views.mark_meal_taken, name='mark_meal_taken'),
 ]

@@ -966,15 +966,35 @@ def generate_ai_diet_plan(request):
         # Set all other plans to inactive
         DietPlan.objects.filter(user=request.user).exclude(id=diet_plan.id).update(is_active=False)
 
-        # Generate AI diet plan
-        ai_generated_plan = generate_diet_plan(user_profile, diet_pref)
+        try:
+            # Generate AI diet plan
+            ai_generated_plan = generate_diet_plan(user_profile, diet_pref)
 
-        # Store the AI response in the diet plan description
-        diet_plan.description = ai_generated_plan
-        diet_plan.save()
+            # Store the AI response in the diet plan description
+            diet_plan.description = ai_generated_plan
+            diet_plan.save()
 
-        messages.success(request, 'AI Diet plan generated successfully!')
-        return redirect('view_diet_plan', plan_id=diet_plan.id)
+            # Check if the response contains an error message
+            if "API quota exceeded" in ai_generated_plan:
+                messages.warning(request, 'OpenAI API quota exceeded. A fallback plan has been generated.')
+            else:
+                messages.success(request, 'AI Diet plan generated successfully!')
+
+            return redirect('view_diet_plan', plan_id=diet_plan.id)
+        except Exception as e:
+            # If there's an error, delete the diet plan and redirect to the error page
+            diet_plan.delete()
+            error_message = str(e)
+
+            # Check for specific API errors
+            if "quota" in error_message.lower() or "insufficient_quota" in error_message:
+                error_message = "OpenAI API quota exceeded. Please try again later or contact the administrator."
+            elif "invalid_api_key" in error_message.lower():
+                error_message = "Invalid OpenAI API key. Please contact the administrator."
+            else:
+                error_message = f"Error generating AI diet plan: {error_message}"
+
+            return redirect(f'api-error/?error={error_message}')
 
     context = {
         'user_profile': user_profile,
@@ -984,6 +1004,12 @@ def generate_ai_diet_plan(request):
     }
 
     return render(request, 'core/generate_ai_diet_plan.html', context)
+
+# API Error View
+@login_required
+def api_error(request):
+    error_message = request.GET.get('error', 'The OpenAI API service is currently unavailable.')
+    return render(request, 'core/api_error.html', {'error_message': error_message})
 
 # Mark Meal as Taken View
 @login_required
